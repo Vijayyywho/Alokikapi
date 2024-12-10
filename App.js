@@ -41,6 +41,6 @@ app.use("/api/messages", messageRoute);
 app.use("/api/temple", templeRoute);
 app.use("/api/beach", beachRoute);
 
-app.listen(3000, () => {
-  console.log("Server is On");
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });
