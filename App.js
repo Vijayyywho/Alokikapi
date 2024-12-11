@@ -19,7 +19,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://alokik-bwwg.vercel.app/", // Adjust to your frontend URL
+  origin: "https://alokikkkl.netlify.app/", // Adjust to your frontend URL
   credentials: true, // Allow credentials
   optionsSuccessStatus: 200, // For legacy browsers
 };
