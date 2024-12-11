@@ -3,7 +3,6 @@ import postRoute from "./routes/post.route.js";
 import cors from "cors"; // CORS support
 import authRoute from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import testRoute from "./routes/test.route.js";
 import userRoute from "./routes/user.route.js";
@@ -19,9 +18,12 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://alokikkkl.netlify.app", // Your frontend URL
-  credentials: true, // Allow credentials
-  optionsSuccessStatus: 200, // For legacy browsers
+  origin: [
+    "https://alokikk.netlify.app", // Your frontend URL on Netlify
+    "http://localhost:5173", // Your local development URL
+  ],
+  credentials: true, // Allow credentials (cookies, sessions, etc.)
+  optionsSuccessStatus: 200, // For legacy browsers (Fixed typo here)
 };
 
 app.use(cors(corsOptions)); // Use CORS middleware with options
