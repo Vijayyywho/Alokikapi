@@ -13,6 +13,8 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
+  console.log("Received ID:", req.params.id);
+
   try {
     const user = await prisma.user.findUnique({
       where: { id },
@@ -129,6 +131,7 @@ export const profilePosts = async (req, res) => {
 
     const savedPosts = saved.map((item) => item.post);
     console.log("Saved Posts:", savedPosts);
+    console.log(req);
 
     res.status(200).json({ userPosts, savedPosts });
   } catch (err) {

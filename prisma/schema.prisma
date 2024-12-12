@@ -76,10 +76,10 @@ model User {
   password   String
   avatar     String?
   createdAt  DateTime    @default(now())
-  posts      Post[]
-  savedPosts SavedPost[]
-  chats      Chat[]      @relation(fields: [chatIDs], references: [id])
-  chatIDs    String[]    @db.ObjectId
+  posts      Post[]      // One-to-many relation with Post
+  savedPosts SavedPost[] // One-to-many relation with SavedPost
+  chats      Chat[]      @relation(fields: [chatIDs], references: [id]) // Relation to Chat
+  chatIDs    String[]    @db.ObjectId // Array of ObjectId strings
   reviews    Review[]    // Reverse relation to Review
 }
 

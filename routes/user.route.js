@@ -12,12 +12,11 @@ import { verifyToken } from "../Middleware/verifyToken.js";
 
 const router = express.Router();
 
-router.get("/", getUsers);
-// router.get("/search/:id", verifyToken, getUser);
+router.get("/notification", verifyToken, getNotificationNumber); // More specific route
+router.get("/profilePosts", verifyToken, profilePosts);
+router.get("/:id", verifyToken, getUser); // Less specific dynamic route
 router.put("/:id", verifyToken, updateUser);
 router.delete("/:id", verifyToken, deleteUser);
 router.post("/save", verifyToken, savePost);
-router.get("/profilePosts", verifyToken, profilePosts);
-router.get("/notification", verifyToken, getNotificationNumber);
 
 export default router;
