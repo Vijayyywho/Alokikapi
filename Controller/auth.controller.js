@@ -30,33 +30,52 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (loginData) => {
+export const login = async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginData),
+    // CHECK IF THE USER EXISTS
+
+    const user = await prisma.user.findUnique({
+      where: { username },
     });
 
-    if (response.ok) {
-      const userData = await response.json();
-      console.log("User data received:", userData);
+    if (!user) return res.status(400).json({ message: "Invalid Credentials!" });
 
-      // Store the user ID in local storage
-      localStorage.setItem("userId", userData.id);
-      console.log("User ID saved to local storage:", userData.id);
+    // CHECK IF THE PASSWORD IS CORRECT
 
-      // Optionally, store the token in local storage or cookies if needed
-      // Example:
-      // localStorage.setItem("authToken", token); // From the response if included
-    } else {
-      const error = await response.json();
-      console.error("Login failed:", error.message);
-    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid)
+      return res.status(400).json({ message: "Invalid Credentials!" });
+
+    // GENERATE COOKIE TOKEN AND SEND TO THE USER
+
+    // res.setHeader("Set-Cookie", "test=" + "myValue").json("success")
+    const age = 1000 * 60 * 60 * 24 * 7;
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        isAdmin: false,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: age }
+    );
+
+    const { password: userPassword, ...userInfo } = user;
+
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        // secure:true,
+        maxAge: age,
+      })
+      .status(200)
+      .json(userInfo);
   } catch (err) {
-    console.error("An error occurred during login:", err);
+    console.log(err);
+    res.status(500).json({ message: "Failed to login!" });
   }
 };
 
