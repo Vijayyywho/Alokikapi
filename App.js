@@ -11,6 +11,8 @@ import messageRoute from "./routes/message.route.js";
 import reviewRoute from "./routes/review.route.js"; // Ensure this is correctly imported
 import templeRoute from "./routes/temple.route.js";
 import beachRoute from "./routes/beach.route.js";
+import waterfallRoute from "./routes/waterfall.route.js";
+import historicRoute from "./routes/Historic.route.js";
 
 dotenv.config();
 
@@ -42,6 +44,8 @@ app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/temple", templeRoute);
 app.use("/api/beach", beachRoute);
+app.use("/api/waterfall", waterfallRoute);
+app.use("/api/historic", historicRoute);
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
