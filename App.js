@@ -21,7 +21,7 @@ const app = express();
 // CORS configuration
 const corsOptions = {
   origin: [
-    "https://alokik.netlify.app", // Your frontend URL on Netlify
+    "https://alokikpalghar.com/", // Your frontend URL on Netlify
     "http://localhost:5173", // Your local development URL
   ],
   credentials: true, // Allow credentials (cookies, sessions, etc.)
