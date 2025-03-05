@@ -13,21 +13,23 @@ model Post {
   price      Int
   images     String[]
   address    String
-  city       String
+  city     String      // Replaced city with taluka
   bedroom    Int
   bathroom   Int
   latitude   String
   longitude  String
   type       Type
   property   Property
-  amenities  Json        @default("{}")  // Ensure it defaults to an empty JSON object if not provided
+  amenities  Json        @default("{}")  // Defaults to an empty JSON object if not provided
   createdAt  DateTime    @default(now())
   user       User        @relation(fields: [userId], references: [id])
   userId     String      @db.ObjectId
   postDetail PostDetail? @relation("PostDetailPost")
   savedPosts SavedPost[]
-  reviews    Review[]    // New relation field for reviews
+  reviews    Review[]    // Relation field for reviews
+  isPureVegJain  Boolean     @default(false) // New field for indicating Pure Veg availability
 }
+
 
 enum Type {
   buy

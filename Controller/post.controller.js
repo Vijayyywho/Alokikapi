@@ -171,18 +171,45 @@ export const addPost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
+  console.log("Updating post with ID:", req.params.id); // Debug log
+
+  // Log the received data to see what is coming in the request
+  console.log("Received postData:", req.body.postData);
+  console.log("Received postDetail:", req.body.postDetail);
+
   const { postData, postDetail } = req.body;
   const postId = req.params.id;
-  const tokenUserId = req.userId;
+  const tokenUserId = req.userId; // Ensure req.userId is populated
+
+  if (!tokenUserId) {
+    return res.status(403).json({ message: "Unauthorized: User ID missing" });
+  }
+
+  console.log(postData, !postData ? "postdata is undefined" : "---");
 
   try {
-    // Validate required fields
     if (!postData || !postDetail) {
       return res
         .status(400)
         .json({ message: "Post data and details are required" });
     }
 
+    // Ensure user can only update their own post
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.userId !== tokenUserId) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: You can only update your own posts" });
+    }
+
+    // Validate amenities data
     const validatedAmenities = postDetail.amenities
       ? {
           included: postDetail.amenities.included || [],
@@ -190,10 +217,16 @@ export const updatePost = async (req, res) => {
         }
       : { included: [], excluded: [] };
 
+    // Check if images are being updated or not
+    const updatedPostData = {
+      ...postData,
+      images: postData.images ? postData.images : post.images, // Retain existing images if none are provided
+    };
+
     const postToUpdate = await prisma.post.update({
       where: { id: postId },
       data: {
-        ...postData,
+        ...updatedPostData,
         postDetail: {
           update: {
             ...postDetail,
@@ -208,7 +241,7 @@ export const updatePost = async (req, res) => {
 
     res.status(200).json(postToUpdate);
   } catch (err) {
-    console.log(err);
+    console.log("Error updating post:", err);
     res.status(500).json({ message: "Failed to update post" });
   }
 };
