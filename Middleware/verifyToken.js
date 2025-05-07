@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
   // Check for token in cookies
+  console.log(req.cookies);
   const token = req.cookies?.token;
   console.log("All Cookies:", req.cookies); // Debug log
   console.log("Received Token:", token); // Debug log
